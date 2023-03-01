@@ -53,6 +53,11 @@
     - Person 바운딩박스 안에 다른 객체의 중심값이 들어가는지 확인
 2.  인식하고 싶은 객체 체크 기능 (프로그램 사용자가 작업장에 맞는 장구류 착용여부 선택)
 
-3.  일정 시간 이상 화면 내 미착용 검출 시, 이메일 알림 서비스
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/60f6e7ea-dcf8-440f-b34f-ac2a6d9a8681/Untitled.png)
+3.  일정 시간 이상 화면 내 미착용 검출 시, 이메일 알림 서비스\
+![Untitled](https://user-images.githubusercontent.com/107936957/222188028-f86327f0-c2b6-4f07-83de-6dce2f832629.png)
+
 - 개선 사항
+1. Person 객체 바운딩 박스가 겹치거나, 하나의 바운딩 박스안에 또 다른 박스가 생기는 문제
+2. 화면안에 여러 사람이 있을 경우, 각각 사람에 대한 개인적인 추적 및 알림 불가능
+3. 실시간 서비스를  할 때, Frame 처리 문제
+4. 이메일 전송 시 처리속도 문제
