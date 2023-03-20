@@ -4,7 +4,7 @@ import numpy as np
 
 class Detection(object):
     """
-    This class represents a bounding box detection in a single image.
+    This class represents a bounding box detection in a single 05.image.
 
     Parameters
     ----------
@@ -13,7 +13,7 @@ class Detection(object):
     confidence : float
         Detector confidence score.
     feature : array_like
-        A feature vector that describes the object contained in this image.
+        A feature vector that describes the object contained in this 05.image.
 
     Attributes
     ----------
@@ -22,7 +22,7 @@ class Detection(object):
     confidence : ndarray
         Detector confidence score.
     feature : ndarray | NoneType
-        A feature vector that describes the object contained in this image.
+        A feature vector that describes the object contained in this 05.image.
 
     """
 

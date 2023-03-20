@@ -20,8 +20,8 @@ def predict():
     if not request.method == "POST":
         return
 
-    if request.files.get("image"):
-        image_file = request.files["image"]
+    if request.files.get("05.image"):
+        image_file = request.files["05.image"]
         image_bytes = image_file.read()
 
         img = Image.open(io.BytesIO(image_bytes))

@@ -440,7 +440,7 @@ class WandbLogger():
 
         arguments:
         predn (list): list of predictions in the native space in the format - [xmin, ymin, xmax, ymax, confidence, class]
-        path (str): local path of the current evaluation image
+        path (str): local path of the current evaluation 05.image
         names (dict(int, str)): hash map that maps class ids to labels
         """
         class_set = wandb.Classes([{'id': id, 'name': name} for id, name in names.items()])
@@ -479,12 +479,12 @@ class WandbLogger():
 
     def val_one_image(self, pred, predn, path, names, im):
         """
-        Log validation data for one image. updates the result Table if validation dataset is uploaded and log bbox media panel
+        Log validation data for one 05.image. updates the result Table if validation dataset is uploaded and log bbox media panel
 
         arguments:
         pred (list): list of scaled predictions in the format - [xmin, ymin, xmax, ymax, confidence, class]
         predn (list): list of predictions in the native space - [xmin, ymin, xmax, ymax, confidence, class]
-        path (str): local path of the current evaluation image
+        path (str): local path of the current evaluation 05.image
         """
         if self.val_table and self.result_table:  # Log Table if Val dataset is uploaded as artifact
             self.log_training_progress(predn, path, names)

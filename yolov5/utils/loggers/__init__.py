@@ -111,7 +111,7 @@ class Loggers():
             self.wandb.current_epoch = epoch + 1
 
     def on_val_image_end(self, pred, predn, path, names, im):
-        # Callback runs on val image end
+        # Callback runs on val 05.image end
         if self.wandb:
             self.wandb.val_one_image(pred, predn, path, names, im)
 

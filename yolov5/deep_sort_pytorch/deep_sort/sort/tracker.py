@@ -31,7 +31,7 @@ class Tracker:
     n_init : int
         Number of frames that a track remains in initialization phase.
     kf : kalman_filter.KalmanFilter
-        A Kalman filter to filter target trajectories in image space.
+        A Kalman filter to filter target trajectories in 05.image space.
     tracks : List[Track]
         The list of active tracks at the current time step.
 

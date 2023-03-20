@@ -89,7 +89,7 @@ class MyWindow(QMainWindow):
     def setupUI(self):
         # Set main window
         self.setWindowTitle("MS AI School")
-        self.setWindowIcon(QIcon('image/icon.png'))
+        self.setWindowIcon(QIcon('05.image/icon.png'))
         self.setGeometry(100, 100, 1300, 800)
         self.setStyleSheet("color: white;"
                         "background-color: #333333")
@@ -171,7 +171,7 @@ class MyWindow(QMainWindow):
         self.cb3.stateChanged.connect(self.check_shoes)
 
         # Image window
-        self.pixmap = QPixmap('image/black.png')
+        self.pixmap = QPixmap('05.image/black.png')
         self.image_label = QLabel(self)
         self.image_label.setPixmap(self.pixmap)  # 이미지 세팅
         self.image_label.setContentsMargins(10, 10, 10, 10)  # 1120 630
@@ -266,7 +266,7 @@ class MyWindow(QMainWindow):
                     cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 1)
                     cv2.putText(image, result, (int((x1 + x2) / 2) - 15, int(y1 + 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                                 (0, 255, 255), 2)
-                    # cv2.putText(image, str(round(r[4], 4)), (int(x1), int(y1 - 25)), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
+                    # cv2.putText(05.image, str(round(r[4], 4)), (int(x1), int(y1 - 25)), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                     #             (0, 255, 255), 2)
                 except Exception as e:
                     print(e)
@@ -331,8 +331,8 @@ class MyWindow(QMainWindow):
                 self.image_label.setContentsMargins(10, 10, 10, 10)  # 여백 설정
                 self.image_label.resize(self.pixmap.width(), self.pixmap.height())
                 self.image_label.move(140, 0)
-                self.sb.showMessage('COMPLETE  --- Show image')
-                self.add_gui_console('COMPLETE  --- Show image')
+                self.sb.showMessage('COMPLETE  --- Show 05.image')
+                self.add_gui_console('COMPLETE  --- Show 05.image')
             else :
                 self.add_gui_console('WARNING   --- Not Found (Image) File')
                 self.sb.showMessage('WARNING   --- Not Found (Image) File')
@@ -372,7 +372,7 @@ class MyWindow(QMainWindow):
                                 self.danger_last_time = time.time()
 
                                 if self.danger_last_time - self.danger_start_time >= self.send_limit_time:
-                                    cv2.imwrite('./image/email_image.png', frame)
+                                    cv2.imwrite('./05.image/email_image.png', frame)
                                     self.send_email()
                                     self.reset_danger()
                             else:
@@ -459,7 +459,7 @@ class MyWindow(QMainWindow):
         "
 
         # 이미지 첨부
-        image_name = "./image/email_image.png"
+        image_name = "./05.image/email_image.png"
         with open(image_name, 'rb') as fp:
             img = MIMEImage(fp.read())
             img.add_header('Content-Disposition', 'attachment', filename=image_name)
@@ -508,7 +508,7 @@ class MyWindow(QMainWindow):
             imgsz=(640, 640),  # inference size (height, width)
             conf_thres=0.25,  # confidence threshold
             iou_thres=0.45,  # NMS IOU threshold
-            max_det=1000,  # maximum detections per image
+            max_det=1000,  # maximum detections per 05.image
             save_txt=False,  # save results to *.txt
             save_crop=False,  # save cropped prediction boxes
             classes=6,  # filter by class: --class 0, or --class 0 2 3
@@ -553,11 +553,11 @@ class MyWindow(QMainWindow):
                 # model = DetectMultiBackend(weights, device=device, dnn=False, data='./data/data.yaml', fp16=False)
                 model = self.model
                 stride, names, pt = model.stride, model.names, model.pt
-                imgsz = check_img_size(imgsz, s=stride)  # check image size
+                imgsz = check_img_size(imgsz, s=stride)  # check 05.image size
 
                 # Dataloader
                 if webcam:
-                    cudnn.benchmark = True  # set True to speed up constant image size inference
+                    cudnn.benchmark = True  # set True to speed up constant 05.image size inference
                     dataset = LoadStreams(source, img_size=imgsz, stride=stride, auto=pt)
                     bs = len(dataset)  # batch_size
                 else:
@@ -592,7 +592,7 @@ class MyWindow(QMainWindow):
 
                     frame_idx = frame_idx + 1
                     # Process predictions
-                    for i, det in enumerate(pred):  # detections per image
+                    for i, det in enumerate(pred):  # detections per 05.image
                         seen += 1
                         if webcam:  # batch_size >= 1
                             p, im0, frame = path[i], im0s[i].copy(), dataset.count
@@ -651,7 +651,7 @@ class MyWindow(QMainWindow):
                         self.danger_last_time = time.time()
 
                         if self.danger_last_time - self.danger_start_time >= self.send_limit_time:
-                            cv2.imwrite('./image/email_image.png', frame)
+                            cv2.imwrite('./05.image/email_image.png', frame)
                             self.send_email()
                             self.reset_danger()
                     else:

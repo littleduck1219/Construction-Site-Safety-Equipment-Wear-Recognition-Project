@@ -139,7 +139,7 @@ def run(
         # Load model
         model = DetectMultiBackend(weights, device=device, dnn=dnn, data=data, fp16=half)
         stride, pt, jit, engine = model.stride, model.pt, model.jit, model.engine
-        imgsz = check_img_size(imgsz, s=stride)  # check image size
+        imgsz = check_img_size(imgsz, s=stride)  # check 05.image size
         half = model.fp16  # FP16 supported on limited backends with CUDA
         if engine:
             batch_size = model.batch_size
@@ -280,7 +280,7 @@ def run(
             LOGGER.info(pf % (names[c], seen, nt[c], p[i], r[i], ap50[i], ap[i]))
 
     # Print speeds
-    t = tuple(x / seen * 1E3 for x in dt)  # speeds per image
+    t = tuple(x / seen * 1E3 for x in dt)  # speeds per 05.image
     if not training:
         shape = (batch_size, 3, imgsz, imgsz)
         LOGGER.info(f'Speed: %.1fms pre-process, %.1fms inference, %.1fms NMS per image at shape {shape}' % t)
@@ -308,7 +308,7 @@ def run(
             pred = anno.loadRes(pred_json)  # init predictions api
             eval = COCOeval(anno, pred, 'bbox')
             if is_coco:
-                eval.params.imgIds = [int(Path(x).stem) for x in dataloader.dataset.im_files]  # image IDs to evaluate
+                eval.params.imgIds = [int(Path(x).stem) for x in dataloader.dataset.im_files]  # 05.image IDs to evaluate
             eval.evaluate()
             eval.accumulate()
             eval.summarize()
@@ -379,7 +379,7 @@ def main(opt):
             # python val.py --task study --data coco.yaml --iou 0.7 --weights yolov5n.pt yolov5s.pt...
             for opt.weights in weights:
                 f = f'study_{Path(opt.data).stem}_{Path(opt.weights).stem}.txt'  # filename to save to
-                x, y = list(range(256, 1536 + 128, 128)), []  # x axis (image sizes), y axis
+                x, y = list(range(256, 1536 + 128, 128)), []  # x axis (05.image sizes), y axis
                 for opt.imgsz in x:  # img-size
                     LOGGER.info(f'\nRunning {f} --imgsz {opt.imgsz}...')
                     r, _, t = run(**vars(opt), plots=False)

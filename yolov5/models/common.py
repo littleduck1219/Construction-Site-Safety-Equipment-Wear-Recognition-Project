@@ -434,7 +434,7 @@ class DetectMultiBackend(nn.Module):
             im = im.permute(0, 2, 3, 1).cpu().numpy()  # torch BCHW to numpy BHWC shape(1,320,192,3)
             im = Image.fromarray((im[0] * 255).astype('uint8'))
             # im = im.resize((192, 320), Image.ANTIALIAS)
-            y = self.model.predict({'image': im})  # coordinates are xywh normalized
+            y = self.model.predict({'05.image': im})  # coordinates are xywh normalized
             if 'confidence' in y:
                 box = xywh2xyxy(y['coordinates'] * [[w, h, w, h]])  # xyxy pixels
                 conf, cls = y['confidence'].max(1), y['confidence'].argmax(1).astype(np.float)
@@ -494,7 +494,7 @@ class AutoShape(nn.Module):
     agnostic = False  # NMS class-agnostic
     multi_label = False  # NMS multiple labels per box
     classes = None  # (optional list) filter by class, i.e. = [0, 15, 16] for COCO persons, cats and dogs
-    max_det = 1000  # maximum number of detections per image
+    max_det = 1000  # maximum number of detections per 05.image
     amp = False  # Automatic Mixed Precision (AMP) inference
 
     def __init__(self, model):
@@ -521,8 +521,8 @@ class AutoShape(nn.Module):
         # Inference from various sources. For height=640, width=1280, RGB images example inputs are:
         #   file:       imgs = 'data/images/zidane.jpg'  # str or PosixPath
         #   URI:             = 'https://ultralytics.com/images/zidane.jpg'
-        #   OpenCV:          = cv2.imread('image.jpg')[:,:,::-1]  # HWC BGR to RGB x(640,1280,3)
-        #   PIL:             = Image.open('image.jpg') or ImageGrab.grab()  # HWC x(640,1280,3)
+        #   OpenCV:          = cv2.imread('05.image.jpg')[:,:,::-1]  # HWC BGR to RGB x(640,1280,3)
+        #   PIL:             = Image.open('05.image.jpg') or ImageGrab.grab()  # HWC x(640,1280,3)
         #   numpy:           = np.zeros((640,1280,3))  # HWC
         #   torch:           = torch.zeros(16,3,320,640)  # BCHW (scaled to size=640, 0-1 values)
         #   multiple:        = [Image.open('image1.jpg'), Image.open('image2.jpg'), ...]  # list of images
@@ -536,20 +536,20 @@ class AutoShape(nn.Module):
 
         # Pre-process
         n, imgs = (len(imgs), list(imgs)) if isinstance(imgs, (list, tuple)) else (1, [imgs])  # number, list of images
-        shape0, shape1, files = [], [], []  # image and inference shapes, filenames
+        shape0, shape1, files = [], [], []  # 05.image and inference shapes, filenames
         for i, im in enumerate(imgs):
-            f = f'image{i}'  # filename
+            f = f'05.image{i}'  # filename
             if isinstance(im, (str, Path)):  # filename or uri
                 im, f = Image.open(requests.get(im, stream=True).raw if str(im).startswith('http') else im), im
                 im = np.asarray(exif_transpose(im))
             elif isinstance(im, Image.Image):  # PIL Image
                 im, f = np.asarray(exif_transpose(im)), getattr(im, 'filename', f) or f
             files.append(Path(f).with_suffix('.jpg').name)
-            if im.shape[0] < 5:  # image in CHW
+            if im.shape[0] < 5:  # 05.image in CHW
                 im = im.transpose((1, 2, 0))  # reverse dataloader .transpose(2, 0, 1)
             im = im[..., :3] if im.ndim == 3 else np.tile(im[..., None], 3)  # enforce 3ch input
             s = im.shape[:2]  # HWC
-            shape0.append(s)  # image shape
+            shape0.append(s)  # 05.image shape
             g = (size / max(s))  # gain
             shape1.append([y * g for y in s])
             imgs[i] = im if im.data.contiguous else np.ascontiguousarray(im)  # update
@@ -588,7 +588,7 @@ class Detections:
         self.imgs = imgs  # list of images as numpy arrays
         self.pred = pred  # list of tensors pred[0] = (xyxy, conf, cls)
         self.names = names  # class names
-        self.files = files  # image filenames
+        self.files = files  # 05.image filenames
         self.times = times  # profiling times
         self.xyxy = pred  # xyxy pixels
         self.xywh = [xyxy2xywh(x) for x in pred]  # xywh pixels
@@ -601,7 +601,7 @@ class Detections:
     def display(self, pprint=False, show=False, save=False, crop=False, render=False, labels=True, save_dir=Path('')):
         crops = []
         for i, (im, pred) in enumerate(zip(self.imgs, self.pred)):
-            s = f'image {i + 1}/{len(self.pred)}: {im.shape[0]}x{im.shape[1]} '  # string
+            s = f'05.image {i + 1}/{len(self.pred)}: {im.shape[0]}x{im.shape[1]} '  # string
             if pred.shape[0]:
                 for c in pred[:, -1].unique():
                     n = (pred[:, -1] == c).sum()  # detections per class
@@ -633,7 +633,7 @@ class Detections:
                 f = self.files[i]
                 im.save(save_dir / f)  # save
                 if i == self.n - 1:
-                    LOGGER.info(f"Saved {self.n} image{'s' * (self.n > 1)} to {colorstr('bold', save_dir)}")
+                    LOGGER.info(f"Saved {self.n} 05.image{'s' * (self.n > 1)} to {colorstr('bold', save_dir)}")
             if render:
                 self.imgs[i] = np.asarray(im)
         if crop:
@@ -643,7 +643,7 @@ class Detections:
 
     def print(self):
         self.display(pprint=True)  # print results
-        LOGGER.info(f'Speed: %.1fms pre-process, %.1fms inference, %.1fms NMS per image at shape {tuple(self.s)}' %
+        LOGGER.info(f'Speed: %.1fms pre-process, %.1fms inference, %.1fms NMS per 05.image at shape {tuple(self.s)}' %
                     self.t)
 
     def show(self, labels=True):

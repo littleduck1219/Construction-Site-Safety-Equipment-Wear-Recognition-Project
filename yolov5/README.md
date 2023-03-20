@@ -113,7 +113,7 @@ the latest YOLOv5 [release](https://github.com/ultralytics/yolov5/releases) and 
 
 ```bash
 python detect.py --source 0  # webcam
-                          img.jpg  # image
+                          img.jpg  # 05.image
                           vid.mp4  # video
                           path/  # directory
                           path/*.jpg  # glob

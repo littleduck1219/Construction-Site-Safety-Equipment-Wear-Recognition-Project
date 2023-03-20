@@ -22,7 +22,7 @@ chi2inv95 = {
 
 class KalmanFilter(object):
     """
-    A simple Kalman filter for tracking bounding boxes in image space.
+    A simple Kalman filter for tracking bounding boxes in 05.image space.
 
     The 8-dimensional state space
 

@@ -287,7 +287,7 @@ def check_git_status():
     msg = ', for updates see https://github.com/ultralytics/yolov5'
     s = colorstr('github: ')  # string
     assert Path('.git').exists(), s + 'skipping check (not a git repository)' + msg
-    assert not is_docker(), s + 'skipping check (Docker image)' + msg
+    assert not is_docker(), s + 'skipping check (Docker 05.image)' + msg
     assert check_online(), s + 'skipping check (offline)' + msg
 
     cmd = 'git fetch && git config --get remote.origin.url'
@@ -356,7 +356,7 @@ def check_requirements(requirements=ROOT / 'requirements.txt', exclude=(), insta
 
 
 def check_img_size(imgsz, s=32, floor=0):
-    # Verify image size is a multiple of stride s in each dimension
+    # Verify 05.image size is a multiple of stride s in each dimension
     if isinstance(imgsz, int):  # integer i.e. img_size=640
         new_size = max(make_divisible(imgsz, int(s)), floor)
     else:  # list i.e. img_size=[640, 480]
@@ -368,7 +368,7 @@ def check_img_size(imgsz, s=32, floor=0):
 
 
 def check_imshow():
-    # Check if environment supports image displays
+    # Check if environment supports 05.image displays
     try:
         assert not is_docker(), 'cv2.imshow() is disabled in Docker environments'
         assert not is_colab(), 'cv2.imshow() is disabled in Google Colab environments'
@@ -378,7 +378,7 @@ def check_imshow():
         cv2.waitKey(1)
         return True
     except Exception as e:
-        LOGGER.warning(f'WARNING: Environment does not support cv2.imshow() or PIL Image.show() image displays\n{e}')
+        LOGGER.warning(f'WARNING: Environment does not support cv2.imshow() or PIL Image.show() 05.image displays\n{e}')
         return False
 
 
@@ -596,7 +596,7 @@ def labels_to_class_weights(labels, nc=80):
     weights = np.bincount(classes, minlength=nc)  # occurrences per class
 
     # Prepend gridpoint count (for uCE training)
-    # gpi = ((320 / 32 * np.array([1, 2, 4])) ** 2 * 3).sum()  # gridpoints per image
+    # gpi = ((320 / 32 * np.array([1, 2, 4])) ** 2 * 3).sum()  # gridpoints per 05.image
     # weights = np.hstack([gpi * len(labels)  - weights.sum() * 9, weights * 9]) ** 0.5  # prepend gridpoints to start
 
     weights[weights == 0] = 1  # replace empty bins with 1
@@ -606,10 +606,10 @@ def labels_to_class_weights(labels, nc=80):
 
 
 def labels_to_image_weights(labels, nc=80, class_weights=np.ones(80)):
-    # Produces image weights based on class_weights and image contents
+    # Produces 05.image weights based on class_weights and 05.image contents
     class_counts = np.array([np.bincount(x[:, 0].astype(np.int), minlength=nc) for x in labels])
     image_weights = (class_weights.reshape(1, nc) * class_counts).sum(1)
-    # index = random.choices(range(n), weights=image_weights, k=1)  # weight image sample
+    # index = random.choices(range(n), weights=image_weights, k=1)  # weight 05.image sample
     return image_weights
 
 
@@ -677,7 +677,7 @@ def xyn2xy(x, w=640, h=640, padw=0, padh=0):
 
 
 def segment2box(segment, width=640, height=640):
-    # Convert 1 segment label to 1 box label, applying inside-image constraint, i.e. (xy1, xy2, ...) to (xyxy)
+    # Convert 1 segment label to 1 box label, applying inside-05.image constraint, i.e. (xy1, xy2, ...) to (xyxy)
     x, y = segment.T  # segment xy
     inside = (x >= 0) & (y >= 0) & (x <= width) & (y <= height)
     x, y, = x[inside], y[inside]
@@ -719,7 +719,7 @@ def scale_coords(img1_shape, coords, img0_shape, ratio_pad=None):
 
 
 def clip_coords(boxes, shape):
-    # Clip bounding xyxy bounding boxes to image shape (height, width)
+    # Clip bounding xyxy bounding boxes to 05.image shape (height, width)
     if isinstance(boxes, torch.Tensor):  # faster individually
         boxes[:, 0].clamp_(0, shape[1])  # x1
         boxes[:, 1].clamp_(0, shape[0])  # y1
@@ -741,7 +741,7 @@ def non_max_suppression(prediction,
     """Non-Maximum Suppression (NMS) on inference results to reject overlapping bounding boxes
 
     Returns:
-         list of detections, on (n,6) tensor per image [xyxy, conf, cls]
+         list of detections, on (n,6) tensor per 05.image [xyxy, conf, cls]
     """
 
     bs = prediction.shape[0]  # batch size
@@ -763,7 +763,7 @@ def non_max_suppression(prediction,
 
     t = time.time()
     output = [torch.zeros((0, 6), device=prediction.device)] * bs
-    for xi, x in enumerate(prediction):  # image index, image inference
+    for xi, x in enumerate(prediction):  # 05.image index, 05.image inference
         # Apply constraints
         # x[((x[..., 2:4] < min_wh) | (x[..., 2:4] > max_wh)).any(1), 4] = 0  # width-height
         x = x[xc[xi]]  # confidence
@@ -777,7 +777,7 @@ def non_max_suppression(prediction,
             v[range(len(lb)), lb[:, 0].long() + 5] = 1.0  # cls
             x = torch.cat((x, v), 0)
 
-        # If none remain process next image
+        # If none remain process next 05.image
         if not x.shape[0]:
             continue
 
@@ -892,7 +892,7 @@ def apply_classifier(x, model, img, im0):
     # Apply a second stage classifier to YOLO outputs
     # Example model = torchvision.models.__dict__['efficientnet_b0'](pretrained=True).to(device).eval()
     im0 = [im0] if isinstance(im0, np.ndarray) else im0
-    for i, d in enumerate(x):  # per image
+    for i, d in enumerate(x):  # per 05.image
         if d is not None and len(d):
             d = d.clone()
 
